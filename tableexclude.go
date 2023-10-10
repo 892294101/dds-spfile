@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"regexp"
@@ -100,13 +100,13 @@ func (e *ExcludeTableSets) put() string {
 // 当传入参数时, 初始化特定参数的值
 func (e *ExcludeTableSets) init() {
 	e.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  ddsutils.Extract,
-			utils.Replicat: ddsutils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  ddsutils.Extract,
-			utils.Replicat: ddsutils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -114,7 +114,7 @@ func (e *ExcludeTableSets) init() {
 // 当没有参数时, 初始化此参数默认值
 func (e *ExcludeTableSets) initDefault() error {
 	e.init()
-	e.paramPrefix = &utils.DBOptionsType
+	e.paramPrefix = &ddsutils.DBOptionsType
 	return nil
 }
 
@@ -129,7 +129,7 @@ func (e *ExcludeTableSets) isType(raw *string, dbType *string, processType *stri
 
 // 新参数进入后, 第一次需要进入解析动作
 func (e *ExcludeTableSets) parse(raw *string) error {
-	reg, err := regexp.Compile(utils.TableExcludeRegular)
+	reg, err := regexp.Compile(ddsutils.TableExcludeRegular)
 	if reg == nil || err != nil {
 		return errors.Errorf("%s parameter Regular compilation error: %s", ddsutils.TableExcludeType, *raw)
 	}
@@ -155,7 +155,7 @@ func (e *ExcludeTableSets) parse(raw *string) error {
 
 // 当出现第二次参数进入, 需要进入add动作
 func (e *ExcludeTableSets) add(raw *string) error {
-	reg, err := regexp.Compile(utils.TableExcludeRegular)
+	reg, err := regexp.Compile(ddsutils.TableExcludeRegular)
 	if reg == nil || err != nil {
 		return errors.Errorf("%s parameter Regular compilation error: %s", ddsutils.TableExcludeType, *raw)
 	}
@@ -217,5 +217,5 @@ func (e *ExcludeTableSet) GetParam() interface{} {
 
 func (e *ExcludeTableSet) Registry() map[string]Parameter {
 	e.Init()
-	return map[string]Parameter{utils.TableExcludeType: e.table}
+	return map[string]Parameter{ddsutils.TableExcludeType: e.table}
 }
