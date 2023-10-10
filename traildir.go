@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"strconv"
 	"strings"
@@ -55,13 +55,13 @@ func (t *TrailDir) put() string {
 // 初始化参数可以支持的数据库和进程
 func (t *TrailDir) init() {
 	t.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -80,17 +80,17 @@ func (t *TrailDir) isType(raw *string, dbType *string, processType *string) erro
 }
 
 func (t *TrailDir) parse(raw *string) error {
-	trail := utils.TrimKeySpace(strings.Split(*raw, " "))
+	trail := ddsutils.TrimKeySpace(strings.Split(*raw, " "))
 	trailLength := len(trail) - 1
 	for i := 0; i < len(trail); i++ {
 		switch {
-		case strings.EqualFold(trail[i], utils.TrailDirType):
+		case strings.EqualFold(trail[i], ddsutils.TrailDirType):
 			t.paramPrefix = &trail[i]
 			if i+1 > trailLength {
 				return errors.Errorf("%s Value must be specified", trail[i])
 			}
 			NextVal := &trail[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if t.DirTrailAttribute.dir != nil {
@@ -99,14 +99,14 @@ func (t *TrailDir) parse(raw *string) error {
 			t.DirTrailAttribute.dir = NextVal
 			i += 1
 
-		case strings.EqualFold(trail[i], utils.TrailSizeKey):
+		case strings.EqualFold(trail[i], ddsutils.TrailSizeKey):
 
 			t.DirTrailAttribute.setSizeKey(&trail[i])
 			if i+1 > trailLength {
-				return errors.Errorf("%s Value must be specified", utils.TrailSizeKey)
+				return errors.Errorf("%s Value must be specified", ddsutils.TrailSizeKey)
 			}
 			NextVal := &trail[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if t.DirTrailAttribute.SizeValue != nil {
@@ -117,20 +117,20 @@ func (t *TrailDir) parse(raw *string) error {
 				return errors.Errorf("%s Value is not a numeric integer: %s", trail[i], *NextVal)
 			}
 
-			if s < utils.DefaultTrailMinSize {
-				return errors.Errorf("%s Value %s cannot be less than the minimum size %d", trail[i], *NextVal, utils.DefaultTrailMinSize)
+			if s < ddsutils.DefaultTrailMinSize {
+				return errors.Errorf("%s Value %s cannot be less than the minimum size %d", trail[i], *NextVal, ddsutils.DefaultTrailMinSize)
 			}
 
 			t.DirTrailAttribute.setSizeValue(&s)
 			i += 1
-		case strings.EqualFold(trail[i], utils.TrailKeepKey):
+		case strings.EqualFold(trail[i], ddsutils.TrailKeepKey):
 
 			t.DirTrailAttribute.setKeepKey(&trail[i])
 			if i+1 > trailLength {
 				return errors.Errorf("%s Value must be specified", trail[i])
 			}
 			NextVal := &trail[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if t.DirTrailAttribute.keepValue != nil {
@@ -147,18 +147,18 @@ func (t *TrailDir) parse(raw *string) error {
 				return errors.Errorf("%s unit Value must be specified", *t.DirTrailAttribute.GetKeepKey())
 			}
 			NextVal = &trail[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if t.DirTrailAttribute.GetKeepUnit() != nil {
 				return errors.Errorf("Parameters cannot be repeated: %s", *NextVal)
 			}
 
-			if strings.EqualFold(*NextVal, utils.MB) || strings.EqualFold(*NextVal, utils.GB) || strings.EqualFold(*NextVal, utils.DAY) {
+			if strings.EqualFold(*NextVal, ddsutils.MB) || strings.EqualFold(*NextVal, ddsutils.GB) || strings.EqualFold(*NextVal, ddsutils.DAY) {
 				t.DirTrailAttribute.setKeepUnit(NextVal)
 				i += 1
 			} else {
-				return errors.Errorf("%s unit Value Only supported %s/%s/%s", *t.DirTrailAttribute.GetKeepKey(), utils.MB, utils.GB, utils.DAY)
+				return errors.Errorf("%s unit Value Only supported %s/%s/%s", *t.DirTrailAttribute.GetKeepKey(), ddsutils.MB, ddsutils.GB, ddsutils.DAY)
 			}
 		default:
 			return errors.Errorf("unknown parameter: %s", trail[i])
@@ -167,26 +167,26 @@ func (t *TrailDir) parse(raw *string) error {
 
 	if t.DirTrailAttribute == nil {
 		t.DirTrailAttribute = &TrailAttribute{
-			sizeKey:   &utils.TrailSizeKey,
-			SizeValue: &utils.DefaultTrailMaxSize,
-			SizeUnit:  &utils.MB,
-			keepKey:   &utils.TrailKeepKey,
-			keepValue: &utils.DefaultTrailKeepValue,
-			keepUnit:  &utils.DAY,
+			sizeKey:   &ddsutils.TrailSizeKey,
+			SizeValue: &ddsutils.DefaultTrailMaxSize,
+			SizeUnit:  &ddsutils.MB,
+			keepKey:   &ddsutils.TrailKeepKey,
+			keepValue: &ddsutils.DefaultTrailKeepValue,
+			keepUnit:  &ddsutils.DAY,
 		}
 	} else {
 		if t.DirTrailAttribute.GetSizeValue() == nil {
-			t.DirTrailAttribute.setSizeKey(&utils.TrailSizeKey)
-			t.DirTrailAttribute.setSizeValue(&utils.DefaultTrailMaxSize)
-			t.DirTrailAttribute.setSizeUnit(&utils.MB)
+			t.DirTrailAttribute.setSizeKey(&ddsutils.TrailSizeKey)
+			t.DirTrailAttribute.setSizeValue(&ddsutils.DefaultTrailMaxSize)
+			t.DirTrailAttribute.setSizeUnit(&ddsutils.MB)
 		}
 		if t.DirTrailAttribute.GetKeepVal() == nil {
-			t.DirTrailAttribute.setKeepKey(&utils.TrailKeepKey)
-			t.DirTrailAttribute.setKeepVal(&utils.DefaultTrailKeepValue)
-			t.DirTrailAttribute.setKeepUnit(&utils.DAY)
+			t.DirTrailAttribute.setKeepKey(&ddsutils.TrailKeepKey)
+			t.DirTrailAttribute.setKeepVal(&ddsutils.DefaultTrailKeepValue)
+			t.DirTrailAttribute.setKeepUnit(&ddsutils.DAY)
 		}
 		if t.DirTrailAttribute.GetSizeUnit() == nil {
-			t.DirTrailAttribute.setSizeUnit(&utils.MB)
+			t.DirTrailAttribute.setSizeUnit(&ddsutils.MB)
 		}
 	}
 
@@ -235,5 +235,5 @@ func (t *trailDirSet) GetParam() interface{} {
 
 func (t *trailDirSet) Registry() map[string]Parameter {
 	t.Init()
-	return map[string]Parameter{utils.TrailDirType: t.trailDir}
+	return map[string]Parameter{ddsutils.TrailDirType: t.trailDir}
 }

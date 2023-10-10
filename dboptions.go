@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"strings"
 )
@@ -15,10 +15,10 @@ type Options struct {
 func (o *Options) setOption(s *string) error {
 	ops := strings.ToUpper(*s)
 	switch ops {
-	case utils.GetReplicates:
-		o.opts[utils.GetReplicates] = true
-	case utils.IgnoreReplicates:
-		o.opts[utils.GetReplicates] = false
+	case ddsutils.GetReplicates:
+		o.opts[ddsutils.GetReplicates] = true
+	case ddsutils.IgnoreReplicates:
+		o.opts[ddsutils.GetReplicates] = false
 	default:
 		ops := strings.ToUpper(*s)
 		_, ok := o.opts[ops]
@@ -32,27 +32,27 @@ func (o *Options) setOption(s *string) error {
 }
 
 func (o *Options) GetReplicates() (*bool, error) {
-	v, ok := o.opts[utils.GetReplicates]
+	v, ok := o.opts[ddsutils.GetReplicates]
 	if ok {
 		return &v, nil
 	}
-	return nil, errors.Errorf("%s Parameter Value acquisition failed", utils.GetReplicates)
+	return nil, errors.Errorf("%s Parameter Value acquisition failed", ddsutils.GetReplicates)
 }
 
 func (o *Options) GetSuppressionTrigger() (*bool, error) {
-	v, ok := o.opts[utils.SuppressionTrigger]
+	v, ok := o.opts[ddsutils.SuppressionTrigger]
 	if ok {
 		return &v, nil
 	}
-	return nil, errors.Errorf("%s Parameter Value acquisition failed", utils.SuppressionTrigger)
+	return nil, errors.Errorf("%s Parameter Value acquisition failed", ddsutils.SuppressionTrigger)
 }
 
 func (o *Options) GetIgnoreForeignkey() (*bool, error) {
-	v, ok := o.opts[utils.IgnoreForeignkey]
+	v, ok := o.opts[ddsutils.IgnoreForeignkey]
 	if ok {
 		return &v, nil
 	}
-	return nil, errors.Errorf("%s Parameter Value acquisition failed", utils.IgnoreForeignkey)
+	return nil, errors.Errorf("%s Parameter Value acquisition failed", ddsutils.IgnoreForeignkey)
 }
 
 type DBOptions struct {
@@ -74,20 +74,20 @@ func (d *DBOptions) put() string {
 // 当传入参数时, 初始化特定参数的值
 func (d *DBOptions) init() {
 	d.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 	d.OptionsSet = &Options{
 		opts: map[string]bool{
-			utils.SuppressionTrigger: false,
-			utils.IgnoreForeignkey:   false,
-			utils.GetReplicates:      false,
+			ddsutils.SuppressionTrigger: false,
+			ddsutils.IgnoreForeignkey:   false,
+			ddsutils.GetReplicates:      false,
 		},
 	}
 }
@@ -95,7 +95,7 @@ func (d *DBOptions) init() {
 // 当没有参数时, 初始化此参数默认值
 func (d *DBOptions) initDefault() error {
 	d.init()
-	d.paramPrefix = &utils.DBOptionsType
+	d.paramPrefix = &ddsutils.DBOptionsType
 	return nil
 }
 
@@ -109,10 +109,10 @@ func (d *DBOptions) isType(raw *string, dbType *string, processType *string) err
 }
 
 func (d *DBOptions) parse(raw *string) error {
-	options := utils.TrimKeySpace(strings.Split(*raw, " "))
+	options := ddsutils.TrimKeySpace(strings.Split(*raw, " "))
 	optionsLength := len(options) - 1
 	for i := 0; i < len(options); i++ {
-		if strings.EqualFold(options[i], utils.DBOptionsType) {
+		if strings.EqualFold(options[i], ddsutils.DBOptionsType) {
 			d.paramPrefix = &options[i]
 			if i+1 > optionsLength {
 				return errors.Errorf("%s Value must be specified", options[i])
@@ -167,5 +167,5 @@ func (d *DBOptionsSet) GetParam() interface{} {
 
 func (d *DBOptionsSet) Registry() map[string]Parameter {
 	d.Init()
-	return map[string]Parameter{utils.DBOptionsType: d.dbOps}
+	return map[string]Parameter{ddsutils.DBOptionsType: d.dbOps}
 }

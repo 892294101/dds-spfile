@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"regexp"
 	"strings"
@@ -31,13 +31,13 @@ func (p *Process) put() string {
 // 初始化参数可以支持的数据库和进程
 func (p *Process) init() {
 	p.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -56,7 +56,7 @@ func (p *Process) isType(raw *string, dbType *string, processType *string) error
 }
 
 func (p *Process) parse(raw *string) error {
-	matched, _ := regexp.MatchString(utils.ProcessRegular, *raw)
+	matched, _ := regexp.MatchString(ddsutils.ProcessRegular, *raw)
 	if matched == true {
 		rd := strings.Split(*raw, " ")
 		p.paramPrefix = &rd[0]
@@ -65,7 +65,7 @@ func (p *Process) parse(raw *string) error {
 		return nil
 	}
 
-	return errors.Errorf("%s parameter parsing failed: %s", utils.ProcessType, *raw)
+	return errors.Errorf("%s parameter parsing failed: %s", ddsutils.ProcessType, *raw)
 }
 
 func (p *Process) add(raw *string) error {
@@ -105,5 +105,5 @@ func (p *processSet) GetParam() interface{} {
 
 func (p *processSet) Registry() map[string]Parameter {
 	p.Init()
-	return map[string]Parameter{utils.ProcessType: p.process}
+	return map[string]Parameter{ddsutils.ProcessType: p.process}
 }

@@ -101,12 +101,12 @@ func (e *ExcludeTableSets) put() string {
 func (e *ExcludeTableSets) init() {
 	e.supportParams = map[string]map[string]string{
 		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+			utils.Extract:  ddsutils.Extract,
+			utils.Replicat: ddsutils.Replicat,
 		},
 		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+			utils.Extract:  ddsutils.Extract,
+			utils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -131,14 +131,14 @@ func (e *ExcludeTableSets) isType(raw *string, dbType *string, processType *stri
 func (e *ExcludeTableSets) parse(raw *string) error {
 	reg, err := regexp.Compile(utils.TableExcludeRegular)
 	if reg == nil || err != nil {
-		return errors.Errorf("%s parameter Regular compilation error: %s", utils.TableExcludeType, *raw)
+		return errors.Errorf("%s parameter Regular compilation error: %s", ddsutils.TableExcludeType, *raw)
 	}
 
 	result := reg.FindStringSubmatch(*raw)
 	if len(result) < 1 {
-		return errors.Errorf("%s parameter Regular get substring error: %s", utils.TableExcludeType, *raw)
+		return errors.Errorf("%s parameter Regular get substring error: %s", ddsutils.TableExcludeType, *raw)
 	}
-	result = utils.TrimKeySpace(result)
+	result = ddsutils.TrimKeySpace(result)
 
 	if e.paramPrefix == nil {
 		e.paramPrefix = &result[1]
@@ -157,14 +157,14 @@ func (e *ExcludeTableSets) parse(raw *string) error {
 func (e *ExcludeTableSets) add(raw *string) error {
 	reg, err := regexp.Compile(utils.TableExcludeRegular)
 	if reg == nil || err != nil {
-		return errors.Errorf("%s parameter Regular compilation error: %s", utils.TableExcludeType, *raw)
+		return errors.Errorf("%s parameter Regular compilation error: %s", ddsutils.TableExcludeType, *raw)
 	}
 
 	result := reg.FindStringSubmatch(*raw)
 	if len(result) < 1 {
-		return errors.Errorf("%s parameter Regular get substring error: %s", utils.TableExcludeType, *raw)
+		return errors.Errorf("%s parameter Regular get substring error: %s", ddsutils.TableExcludeType, *raw)
 	}
-	result = utils.TrimKeySpace(result)
+	result = ddsutils.TrimKeySpace(result)
 
 	ownerTable := ownerTable{ValToUper(result[3]), ValToUper(result[5])}
 	_, ok := e.TableBus.tableList[ownerTable]

@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	ddsutils "github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"regexp"
@@ -100,13 +100,13 @@ func (t *TableSets) put() string {
 // 当传入参数时, 初始化特定参数的值
 func (t *TableSets) init() {
 	t.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -114,7 +114,7 @@ func (t *TableSets) init() {
 // 当没有参数时, 初始化此参数默认值
 func (t *TableSets) initDefault() error {
 	t.init()
-	t.paramPrefix = &utils.DBOptionsType
+	t.paramPrefix = &ddsutils.DBOptionsType
 	return nil
 }
 
@@ -129,16 +129,16 @@ func (t *TableSets) isType(raw *string, dbType *string, processType *string) err
 
 // 新参数进入后, 第一次需要进入解析动作
 func (t *TableSets) parse(raw *string) error {
-	reg, err := regexp.Compile(utils.TableRegular)
+	reg, err := regexp.Compile(ddsutils.TableRegular)
 	if reg == nil || err != nil {
-		return errors.Errorf("%s parameter Regular compilation error: %s", utils.TableType, *raw)
+		return errors.Errorf("%s parameter Regular compilation error: %s", ddsutils.TableType, *raw)
 	}
 
 	result := reg.FindStringSubmatch(*raw)
 	if len(result) < 1 {
-		return errors.Errorf("%s parameter Regular get substring error: %s", utils.TableType, *raw)
+		return errors.Errorf("%s parameter Regular get substring error: %s", ddsutils.TableType, *raw)
 	}
-	result = utils.TrimKeySpace(result)
+	result = ddsutils.TrimKeySpace(result)
 
 	if t.paramPrefix == nil {
 		t.paramPrefix = &result[1]
@@ -152,14 +152,14 @@ func (t *TableSets) parse(raw *string) error {
 	}
 
 	return nil
-	/*matched, _ := regexp.MatchString(utils.TableRegular, *raw)
+	/*matched, _ := regexp.MatchString(ddsutils.TableRegular, *raw)
 	if matched == true {
 		rawText := *raw
 		rawText = rawText[:len(rawText)-1]
 
-		tab := utils.TrimKeySpace(strings.Split(rawText, " "))
+		tab :=ddsutils.TrimKeySpace(strings.Split(rawText, " "))
 		for i := 0; i < len(tab); i++ {
-			if strings.EqualFold(tab[i], utils.TableType) {
+			if strings.EqualFold(tab[i],ddsutils.TableType) {
 				t.ParamPrefix = &tab[i]
 			} else {
 				tabVal := strings.Split(tab[i], ".")
@@ -176,24 +176,24 @@ func (t *TableSets) parse(raw *string) error {
 	}
 
 	if ok := strings.HasSuffix(*raw, ";"); !ok {
-		return errors.Errorf("%s parameter must end with a semicolon: %s", utils.TableType, *raw)
+		return errors.Errorf("%s parameter must end with a semicolon: %s",ddsutils.TableType, *raw)
 	}
 
-	return errors.Errorf("Incorrect %s parameter user(or db) and table Name rules: %s", utils.TableType, *raw)*/
+	return errors.Errorf("Incorrect %s parameter user(or db) and table Name rules: %s",ddsutils.TableType, *raw)*/
 }
 
 // 当出现第二次参数进入, 需要进入add动作
 func (t *TableSets) add(raw *string) error {
-	reg, err := regexp.Compile(utils.TableRegular)
+	reg, err := regexp.Compile(ddsutils.TableRegular)
 	if reg == nil || err != nil {
-		return errors.Errorf("%s parameter Regular compilation error: %s", utils.TableType, *raw)
+		return errors.Errorf("%s parameter Regular compilation error: %s", ddsutils.TableType, *raw)
 	}
 
 	result := reg.FindStringSubmatch(*raw)
 	if len(result) < 1 {
-		return errors.Errorf("%s parameter Regular get substring error: %s", utils.TableType, *raw)
+		return errors.Errorf("%s parameter Regular get substring error: %s", ddsutils.TableType, *raw)
 	}
-	result = utils.TrimKeySpace(result)
+	result = ddsutils.TrimKeySpace(result)
 
 	ownerTable := ownerTable{ownerValue: ValToUper(result[3]), tableValue: ValToUper(result[5])}
 	_, ok := t.TableBus.tableList[ownerTable]
@@ -207,9 +207,9 @@ func (t *TableSets) add(raw *string) error {
 		rawText := *raw
 		rawText = rawText[:len(rawText)-1]
 
-		tab := utils.TrimKeySpace(strings.Split(rawText, " "))
+		tab :=ddsutils.TrimKeySpace(strings.Split(rawText, " "))
 		for i := 0; i < len(tab); i++ {
-			if strings.EqualFold(tab[i], utils.TableType) {
+			if strings.EqualFold(tab[i],ddsutils.TableType) {
 				t.ParamPrefix = &tab[i]
 			} else {
 				tabVal := strings.Split(tab[i], ".")
@@ -225,9 +225,9 @@ func (t *TableSets) add(raw *string) error {
 		return nil
 	}
 	if ok := strings.HasSuffix(*raw, ";"); !ok {
-		return errors.Errorf("%s parameter must end with a semicolon: %s", utils.TableType, *raw)
+		return errors.Errorf("%s parameter must end with a semicolon: %s",ddsutils.TableType, *raw)
 	}
-	return errors.Errorf("Incorrect %s parameter user(or db) and table Name rules: %s", utils.TableType, *raw)
+	return errors.Errorf("Incorrect %s parameter user(or db) and table Name rules: %s",ddsutils.TableType, *raw)
 	*/
 	return nil
 }
@@ -273,5 +273,5 @@ func (t *TableSet) GetParam() interface{} {
 
 func (t *TableSet) Registry() map[string]Parameter {
 	t.Init()
-	return map[string]Parameter{utils.TableType: t.table}
+	return map[string]Parameter{ddsutils.TableType: t.table}
 }

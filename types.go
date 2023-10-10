@@ -2,7 +2,7 @@ package ddsspfile
 
 import (
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/sirupsen/logrus"
 	"regexp"
 	"strings"
@@ -34,19 +34,19 @@ type ETL struct {
 }
 
 func GetMySQLName() string {
-	return utils.MySQL
+	return ddsutils.MySQL
 }
 
 func GetOracleName() string {
-	return utils.Oracle
+	return ddsutils.Oracle
 }
 
 func GetExtractName() string {
-	return utils.Extract
+	return ddsutils.Extract
 }
 
 func GetReplicationName() string {
-	return utils.Replicat
+	return ddsutils.Replicat
 }
 
 func ValToUper(v string) string {

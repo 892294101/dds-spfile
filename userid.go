@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"regexp"
 	"strconv"
@@ -57,7 +57,7 @@ type UserIdTimeZone struct {
 
 func (u *UserIdIpSet) SetIpAddress(ip *string) error {
 	ipSet := strings.Split(*ip, ",")
-	u.key = &utils.OUserIDType
+	u.key = &ddsutils.OUserIDType
 	for _, v := range ipSet {
 		match, _ := regexp.MatchString(IpV4Reg, v)
 		if !match {
@@ -69,7 +69,7 @@ func (u *UserIdIpSet) SetIpAddress(ip *string) error {
 }
 
 func (u *UserIdUserIdModel) SetUserId(uid *string) {
-	u.key = &utils.OUser
+	u.key = &ddsutils.OUser
 	u.value = uid
 }
 
@@ -145,9 +145,9 @@ type UserId struct {
 
 func (u *UserId) init() {
 	u.supportParams = map[string]map[string]string{
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -160,7 +160,7 @@ func (u *UserId) put() string {
 
 	return fmt.Sprintf("%s %s@%s %s %d %s %s %s %s %s %s\n", *u.ParamPrefix,
 		*u.DBInfo.userName.value,
-		*utils.SliceToString(u.DBInfo.address.value, ","),
+		*ddsutils.SliceToString(u.DBInfo.address.value, ","),
 		*u.DBInfo.port.key,
 		*u.DBInfo.port.value,
 		*u.DBInfo.passWord.key,
@@ -181,18 +181,18 @@ func (u *UserId) isType(raw *string, dbType *string, processType *string) error 
 }
 
 func (u *UserId) parse(raw *string) error {
-	uid := utils.TrimKeySpace(strings.Split(*raw, " "))
+	uid := ddsutils.TrimKeySpace(strings.Split(*raw, " "))
 	uidLength := len(uid) - 1
 
 	for i := 0; i < len(uid); i++ {
 		switch {
-		case strings.EqualFold(uid[i], utils.OUserIDType):
+		case strings.EqualFold(uid[i], ddsutils.OUserIDType):
 			u.ParamPrefix = &uid[i]
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.OUserIDType)
+				return errors.Errorf("%s Value must be specified", ddsutils.OUserIDType)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.address != nil {
@@ -203,12 +203,12 @@ func (u *UserId) parse(raw *string) error {
 				return err
 			}
 			i += 1
-		case strings.EqualFold(uid[i], utils.OPassWord):
+		case strings.EqualFold(uid[i], ddsutils.OPassWord):
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.OPassWord)
+				return errors.Errorf("%s Value must be specified", ddsutils.OPassWord)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.passWord != nil {
@@ -217,12 +217,12 @@ func (u *UserId) parse(raw *string) error {
 
 			u.DBInfo.passWord = &UserIdPassWordModel{&uid[i], NextVal}
 			i += 1
-		case strings.EqualFold(uid[i], utils.OSid):
+		case strings.EqualFold(uid[i], ddsutils.OSid):
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.OSid)
+				return errors.Errorf("%s Value must be specified", ddsutils.OSid)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.sid != nil {
@@ -231,12 +231,12 @@ func (u *UserId) parse(raw *string) error {
 
 			u.DBInfo.sid = &UserIdSidModel{&uid[i], NextVal}
 			i += 1
-		case strings.EqualFold(uid[i], utils.OPort):
+		case strings.EqualFold(uid[i], ddsutils.OPort):
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.OPort)
+				return errors.Errorf("%s Value must be specified", ddsutils.OPort)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.port != nil {
@@ -250,18 +250,18 @@ func (u *UserId) parse(raw *string) error {
 
 			p, err := strconv.Atoi(*NextVal)
 			if err != nil {
-				return errors.Errorf("%s %s conversion failed", utils.OPort, *NextVal)
+				return errors.Errorf("%s %s conversion failed", ddsutils.OPort, *NextVal)
 			}
 			port := uint16(p)
 
 			u.DBInfo.port = &UserIdPortModel{&uid[i], &port}
 			i += 1
-		case strings.EqualFold(uid[i], utils.ORetry):
+		case strings.EqualFold(uid[i], ddsutils.ORetry):
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.ORetry)
+				return errors.Errorf("%s Value must be specified", ddsutils.ORetry)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.retryMaxConnNumber != nil {
@@ -270,16 +270,16 @@ func (u *UserId) parse(raw *string) error {
 
 			p, err := strconv.Atoi(*NextVal)
 			if err != nil {
-				return errors.Errorf("%s %s conversion failed", utils.ORetry, *NextVal)
+				return errors.Errorf("%s %s conversion failed", ddsutils.ORetry, *NextVal)
 			}
 			u.DBInfo.retryMaxConnNumber = &UserIdRetryMaxConnect{&uid[i], &p}
 			i += 1
-		case strings.EqualFold(uid[i], utils.OCharacter):
+		case strings.EqualFold(uid[i], ddsutils.OCharacter):
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.OCharacter)
+				return errors.Errorf("%s Value must be specified", ddsutils.OCharacter)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.clientCharacter != nil {
@@ -288,12 +288,12 @@ func (u *UserId) parse(raw *string) error {
 
 			u.DBInfo.clientCharacter = &UserIdClientCharacterSet{&uid[i], NextVal}
 			i += 1
-		case strings.EqualFold(uid[i], utils.OTimeZone):
+		case strings.EqualFold(uid[i], ddsutils.OTimeZone):
 			if i+1 > uidLength {
-				return errors.Errorf("%s Value must be specified", utils.OTimeZone)
+				return errors.Errorf("%s Value must be specified", ddsutils.OTimeZone)
 			}
 			NextVal := &uid[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if u.DBInfo.timeZone != nil {
@@ -309,27 +309,27 @@ func (u *UserId) parse(raw *string) error {
 	}
 
 	if u.DBInfo.port == nil {
-		u.DBInfo.port = &UserIdPortModel{&utils.OPort, &utils.ODefaultPort}
+		u.DBInfo.port = &UserIdPortModel{&ddsutils.OPort, &ddsutils.ODefaultPort}
 	}
 
 	if u.DBInfo.sid == nil {
-		return errors.Errorf("%s %s must be specified", utils.OUserIDType, utils.OSid)
+		return errors.Errorf("%s %s must be specified", ddsutils.OUserIDType, ddsutils.OSid)
 	}
 
 	if u.DBInfo.passWord == nil {
-		return errors.Errorf("%s %s must be specified", utils.OUserIDType, utils.OPassWord)
+		return errors.Errorf("%s %s must be specified", ddsutils.OUserIDType, ddsutils.OPassWord)
 	}
 
 	if u.DBInfo.retryMaxConnNumber == nil {
-		u.DBInfo.retryMaxConnNumber = &UserIdRetryMaxConnect{&utils.ORetry, &utils.ODefaultMaxRetryConnect}
+		u.DBInfo.retryMaxConnNumber = &UserIdRetryMaxConnect{&ddsutils.ORetry, &ddsutils.ODefaultMaxRetryConnect}
 	}
 
 	if u.DBInfo.clientCharacter == nil {
-		return errors.Errorf("%s %s must be specified", utils.OUserIDType, utils.OCharacter)
+		return errors.Errorf("%s %s must be specified", ddsutils.OUserIDType, ddsutils.OCharacter)
 	}
 
 	if u.DBInfo.timeZone == nil {
-		u.DBInfo.timeZone = &UserIdTimeZone{&utils.OTimeZone, &utils.ODefaultTimeZone}
+		u.DBInfo.timeZone = &UserIdTimeZone{&ddsutils.OTimeZone, &ddsutils.ODefaultTimeZone}
 	}
 
 	return nil
@@ -379,5 +379,5 @@ func (u *userIDSet) GetParam() interface{} {
 
 func (u *userIDSet) Registry() map[string]Parameter {
 	u.Init()
-	return map[string]Parameter{utils.OUserIDType: u.uid}
+	return map[string]Parameter{ddsutils.OUserIDType: u.uid}
 }

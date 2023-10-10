@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"strings"
 )
@@ -50,7 +50,7 @@ func (d *DdlSmt) put() string {
 		for _, m := range d.DdlBus.include {
 			for tab, node := range m {
 				buf.WriteString(fmt.Sprintf("%s ", strings.ToUpper(*d.ParamPrefix)))
-				buf.WriteString(fmt.Sprintf("%s ", utils.INCLUDE))
+				buf.WriteString(fmt.Sprintf("%s ", ddsutils.INCLUDE))
 				buf.WriteString(fmt.Sprintf("%s.%s ", tab.owner, tab.table))
 
 				var ct int
@@ -91,7 +91,7 @@ func (d *DdlSmt) put() string {
 		for i, m := range d.DdlBus.exclude {
 			for tab, node := range m {
 				buf.WriteString(fmt.Sprintf("%s ", strings.ToUpper(*d.ParamPrefix)))
-				buf.WriteString(fmt.Sprintf("%s ", utils.EXCLUDE))
+				buf.WriteString(fmt.Sprintf("%s ", ddsutils.EXCLUDE))
 				buf.WriteString(fmt.Sprintf("%s.%s ", tab.owner, tab.table))
 				var ct int
 				if len(node.objType) > 0 {
@@ -135,13 +135,13 @@ func (d *DdlSmt) put() string {
 func (d *DdlSmt) init() {
 	// 初始化支持的进程
 	d.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 
@@ -153,58 +153,58 @@ func (d *DdlSmt) init() {
 	d.supportOption.opts = make(map[string]*supportOptionList)
 
 	// Oracle 支持的DDL选项
-	d.supportOption.opts[utils.Oracle] = new(supportOptionList)
-	d.supportOption.opts[utils.Oracle].objType = make(map[string]*string)
-	d.supportOption.opts[utils.Oracle].opType = make(map[string]*string)
+	d.supportOption.opts[ddsutils.Oracle] = new(supportOptionList)
+	d.supportOption.opts[ddsutils.Oracle].objType = make(map[string]*string)
+	d.supportOption.opts[ddsutils.Oracle].opType = make(map[string]*string)
 	// Oracle 支持的操作类型
-	d.supportOption.opts[utils.Oracle].opType = map[string]*string{
-		utils.CREATE: &utils.CREATE,
-		utils.ALTER:  &utils.ALTER,
-		utils.DROP:   &utils.DROP,
+	d.supportOption.opts[ddsutils.Oracle].opType = map[string]*string{
+		ddsutils.CREATE: &ddsutils.CREATE,
+		ddsutils.ALTER:  &ddsutils.ALTER,
+		ddsutils.DROP:   &ddsutils.DROP,
 	}
 	// Oracle 支持的操作对象
-	d.supportOption.opts[utils.Oracle].objType = map[string]*string{
-		utils.TABLE:     &utils.TABLE,
-		utils.INDEX:     &utils.INDEX,
-		utils.TRIGGER:   &utils.TRIGGER,
-		utils.SEQUENCE:  &utils.SEQUENCE,
-		utils.VIEW:      &utils.VIEW,
-		utils.FUNCTION:  &utils.FUNCTION,
-		utils.PACKAGE:   &utils.PACKAGE,
-		utils.PROCEDURE: &utils.PROCEDURE,
-		utils.TYPE:      &utils.TYPE,
-		utils.DATABASE:  &utils.DATABASE,
+	d.supportOption.opts[ddsutils.Oracle].objType = map[string]*string{
+		ddsutils.TABLE:     &ddsutils.TABLE,
+		ddsutils.INDEX:     &ddsutils.INDEX,
+		ddsutils.TRIGGER:   &ddsutils.TRIGGER,
+		ddsutils.SEQUENCE:  &ddsutils.SEQUENCE,
+		ddsutils.VIEW:      &ddsutils.VIEW,
+		ddsutils.FUNCTION:  &ddsutils.FUNCTION,
+		ddsutils.PACKAGE:   &ddsutils.PACKAGE,
+		ddsutils.PROCEDURE: &ddsutils.PROCEDURE,
+		ddsutils.TYPE:      &ddsutils.TYPE,
+		ddsutils.DATABASE:  &ddsutils.DATABASE,
 	}
 
 	// MySQL 支持的DDL选项
-	d.supportOption.opts[utils.MySQL] = new(supportOptionList)
-	d.supportOption.opts[utils.MySQL].objType = make(map[string]*string)
-	d.supportOption.opts[utils.MySQL].opType = make(map[string]*string)
+	d.supportOption.opts[ddsutils.MySQL] = new(supportOptionList)
+	d.supportOption.opts[ddsutils.MySQL].objType = make(map[string]*string)
+	d.supportOption.opts[ddsutils.MySQL].opType = make(map[string]*string)
 	// Oracle 支持的操作类型
-	d.supportOption.opts[utils.MySQL].opType = map[string]*string{
-		utils.CREATE: &utils.CREATE,
-		utils.ALTER:  &utils.ALTER,
-		utils.DROP:   &utils.DROP,
+	d.supportOption.opts[ddsutils.MySQL].opType = map[string]*string{
+		ddsutils.CREATE: &ddsutils.CREATE,
+		ddsutils.ALTER:  &ddsutils.ALTER,
+		ddsutils.DROP:   &ddsutils.DROP,
 	}
 	// Oracle 支持的操作对象
-	d.supportOption.opts[utils.MySQL].objType = map[string]*string{
-		utils.TABLE:     &utils.TABLE,
-		utils.INDEX:     &utils.INDEX,
-		utils.TRIGGER:   &utils.TRIGGER,
-		utils.SEQUENCE:  &utils.SEQUENCE,
-		utils.VIEW:      &utils.VIEW,
-		utils.FUNCTION:  &utils.FUNCTION,
-		utils.PROCEDURE: &utils.PROCEDURE,
-		utils.TYPE:      &utils.TYPE,
-		utils.EVENT:     &utils.EVENT,
-		utils.USER:      &utils.USER,
-		utils.DATABASE:  &utils.DATABASE,
+	d.supportOption.opts[ddsutils.MySQL].objType = map[string]*string{
+		ddsutils.TABLE:     &ddsutils.TABLE,
+		ddsutils.INDEX:     &ddsutils.INDEX,
+		ddsutils.TRIGGER:   &ddsutils.TRIGGER,
+		ddsutils.SEQUENCE:  &ddsutils.SEQUENCE,
+		ddsutils.VIEW:      &ddsutils.VIEW,
+		ddsutils.FUNCTION:  &ddsutils.FUNCTION,
+		ddsutils.PROCEDURE: &ddsutils.PROCEDURE,
+		ddsutils.TYPE:      &ddsutils.TYPE,
+		ddsutils.EVENT:     &ddsutils.EVENT,
+		ddsutils.USER:      &ddsutils.USER,
+		ddsutils.DATABASE:  &ddsutils.DATABASE,
 	}
 
 }
 
 func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error) {
-	uid := utils.TrimKeySpace(strings.Split(*raw, " "))
+	uid := ddsutils.TrimKeySpace(strings.Split(*raw, " "))
 	uidLength := len(uid) - 1
 	var mark string
 	var ot ownTab
@@ -214,25 +214,25 @@ func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error)
 
 	for i := 0; i < len(uid); i++ {
 		switch {
-		case strings.EqualFold(uid[i], utils.DDL):
+		case strings.EqualFold(uid[i], ddsutils.DDL):
 			d.ParamPrefix = &uid[i]
 			if i+1 > uidLength {
-				return nil, nil, nil, errors.Errorf("%s Value must be specified", utils.OUserIDType)
+				return nil, nil, nil, errors.Errorf("%s Value must be specified", ddsutils.OUserIDType)
 			}
 			NextVal := &uid[i+1]
 			switch {
-			case strings.EqualFold(*NextVal, utils.INCLUDE):
-				mark = utils.INCLUDE
-			case strings.EqualFold(*NextVal, utils.EXCLUDE):
-				mark = utils.EXCLUDE
+			case strings.EqualFold(*NextVal, ddsutils.INCLUDE):
+				mark = ddsutils.INCLUDE
+			case strings.EqualFold(*NextVal, ddsutils.EXCLUDE):
+				mark = ddsutils.EXCLUDE
 			}
 			i = i + 1
-		case strings.EqualFold(uid[i], utils.OBJNAME):
+		case strings.EqualFold(uid[i], ddsutils.OBJNAME):
 			if i+1 > uidLength {
-				return nil, nil, nil, errors.Errorf("%s Value must be specified", utils.OBJNAME)
+				return nil, nil, nil, errors.Errorf("%s Value must be specified", ddsutils.OBJNAME)
 			}
 			if len(ot.owner) > 0 || len(ot.table) > 0 {
-				return nil, nil, nil, errors.Errorf("%s Keywords cannot be repeated", utils.OBJNAME)
+				return nil, nil, nil, errors.Errorf("%s Keywords cannot be repeated", ddsutils.OBJNAME)
 			}
 
 			NextVal := &uid[i+1]
@@ -241,13 +241,13 @@ func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error)
 			for _, op := range ops {
 				ind := strings.Index(strings.TrimSpace(op), ".")
 				if ind == -1 {
-					return nil, nil, nil, errors.Errorf("%s Value must be specified. <database or schema>.<table>", utils.OBJNAME)
+					return nil, nil, nil, errors.Errorf("%s Value must be specified. <database or schema>.<table>", ddsutils.OBJNAME)
 				}
 
 				switch *d.parseDBType {
-				case utils.Oracle:
+				case ddsutils.Oracle:
 					if len(op[:ind]) == 0 {
-						return nil, nil, nil, errors.Errorf("%s %s Value owner Name must be specified", utils.OBJNAME, op)
+						return nil, nil, nil, errors.Errorf("%s %s Value owner Name must be specified", ddsutils.OBJNAME, op)
 					}
 					if strings.HasPrefix(op[:ind], `"`) && strings.HasSuffix(op[:ind], `"`) {
 						// 添加用户，如果前后都包含引号，则使用传递的
@@ -256,11 +256,11 @@ func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error)
 						// 添加用户，如果前后都不包含引号，则转成大写
 						ot.owner = strings.ToUpper(op[:ind])
 					} else {
-						return nil, nil, nil, errors.Errorf("%s Value %s Missing Quotation marks", utils.OBJNAME, op[:ind])
+						return nil, nil, nil, errors.Errorf("%s Value %s Missing Quotation marks", ddsutils.OBJNAME, op[:ind])
 					}
 
 					if len(op[ind+1:]) == 0 {
-						return nil, nil, nil, errors.Errorf("%s %s Value table Name must be specified", utils.OBJNAME, op)
+						return nil, nil, nil, errors.Errorf("%s %s Value table Name must be specified", ddsutils.OBJNAME, op)
 					}
 					if strings.HasPrefix(op[ind+1:], `"`) && strings.HasSuffix(op[ind+1:], `"`) {
 						// 添加用户，如果前后都包含引号，则使用传递的
@@ -269,28 +269,28 @@ func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error)
 						// 添加用户，如果前后都不包含引号，则转成大写
 						ot.table = strings.ToUpper(op[ind+1:])
 					} else {
-						return nil, nil, nil, errors.Errorf("%s Value %s Missing Quotation marks", utils.OBJNAME, op[ind+1:])
+						return nil, nil, nil, errors.Errorf("%s Value %s Missing Quotation marks", ddsutils.OBJNAME, op[ind+1:])
 					}
-				case utils.MySQL:
+				case ddsutils.MySQL:
 					if len(op[:ind]) == 0 {
-						return nil, nil, nil, errors.Errorf("%s %s Value owner Name must be specified", utils.OBJNAME, op)
+						return nil, nil, nil, errors.Errorf("%s %s Value owner Name must be specified", ddsutils.OBJNAME, op)
 					}
 					ot.owner = strings.Trim(op[:ind], `"`)
 
 					if len(op[ind+1:]) == 0 {
-						return nil, nil, nil, errors.Errorf("%s %s Value table Name must be specified", utils.OBJNAME, op)
+						return nil, nil, nil, errors.Errorf("%s %s Value table Name must be specified", ddsutils.OBJNAME, op)
 					}
 					ot.table = strings.Trim(op[ind+1:], `"`)
 				}
 			}
 			i = i + 1
-		case strings.EqualFold(uid[i], utils.OPTYPE):
+		case strings.EqualFold(uid[i], ddsutils.OPTYPE):
 			if i+1 > uidLength {
-				return nil, nil, nil, errors.Errorf("%s Value must be specified", utils.OPTYPE)
+				return nil, nil, nil, errors.Errorf("%s Value must be specified", ddsutils.OPTYPE)
 			}
 
 			if len(on.opType) > 0 || len(on.opType) > 0 {
-				return nil, nil, nil, errors.Errorf("%s Keywords cannot be repeated", utils.OPTYPE)
+				return nil, nil, nil, errors.Errorf("%s Keywords cannot be repeated", ddsutils.OPTYPE)
 			}
 
 			NextVal := &uid[i+1]
@@ -302,21 +302,21 @@ func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error)
 					on.opType[strings.ToUpper(op)] = strings.ToUpper(op)
 				} else {
 					if len(op) == 0 {
-						return nil, nil, nil, errors.Errorf("%s %s Missing option", utils.OPTYPE, *NextVal)
+						return nil, nil, nil, errors.Errorf("%s %s Missing option", ddsutils.OPTYPE, *NextVal)
 					} else {
-						return nil, nil, nil, errors.Errorf("%s %s %s option<%s> is not supported", *d.parseDBType, utils.OPTYPE, *NextVal, op)
+						return nil, nil, nil, errors.Errorf("%s %s %s option<%s> is not supported", *d.parseDBType, ddsutils.OPTYPE, *NextVal, op)
 					}
 
 				}
 			}
 			i = i + 1
-		case strings.EqualFold(uid[i], utils.OBJTYPE):
+		case strings.EqualFold(uid[i], ddsutils.OBJTYPE):
 			if i+1 > uidLength {
-				return nil, nil, nil, errors.Errorf("%s Value must be specified", utils.OBJTYPE)
+				return nil, nil, nil, errors.Errorf("%s Value must be specified", ddsutils.OBJTYPE)
 			}
 
 			if len(on.objType) > 0 || len(on.objType) > 0 {
-				return nil, nil, nil, errors.Errorf("%s Keywords cannot be repeated", utils.OBJTYPE)
+				return nil, nil, nil, errors.Errorf("%s Keywords cannot be repeated", ddsutils.OBJTYPE)
 			}
 
 			NextVal := &uid[i+1]
@@ -328,9 +328,9 @@ func parseDDLText(raw *string, d *DdlSmt) (*string, *ownTab, *ObjectNode, error)
 					on.objType[strings.ToUpper(op)] = strings.ToUpper(op)
 				} else {
 					if len(op) == 0 {
-						return nil, nil, nil, errors.Errorf("%s %s Missing option", utils.OBJTYPE, *NextVal)
+						return nil, nil, nil, errors.Errorf("%s %s Missing option", ddsutils.OBJTYPE, *NextVal)
 					} else {
-						return nil, nil, nil, errors.Errorf("%s %s %s option<%s> is not supported", *d.parseDBType, utils.OBJTYPE, *NextVal, op)
+						return nil, nil, nil, errors.Errorf("%s %s %s option<%s> is not supported", *d.parseDBType, ddsutils.OBJTYPE, *NextVal, op)
 					}
 				}
 
@@ -349,11 +349,11 @@ func (d *DdlSmt) add(raw *string) error {
 		return err
 	}
 	if len(ot.table) == 0 || len(ot.owner) == 0 {
-		return errors.Errorf("%s %s Value must be specified", *d.ParamPrefix, utils.OBJNAME)
+		return errors.Errorf("%s %s Value must be specified", *d.ParamPrefix, ddsutils.OBJNAME)
 	}
 	var exists bool
 	switch *mark {
-	case utils.INCLUDE:
+	case ddsutils.INCLUDE:
 		if d.DdlBus.include == nil {
 			d.DdlBus.include = append(d.DdlBus.include, map[ownTab]*ObjectNode{*ot: on})
 		} else {
@@ -376,7 +376,7 @@ func (d *DdlSmt) add(raw *string) error {
 			}
 		}
 
-	case utils.EXCLUDE:
+	case ddsutils.EXCLUDE:
 		if d.DdlBus.exclude == nil {
 			d.DdlBus.exclude = append(d.DdlBus.exclude, map[ownTab]*ObjectNode{*ot: on})
 		} else {
@@ -423,12 +423,12 @@ func (d *DdlSmt) parse(raw *string) error {
 		return err
 	}
 	if len(ot.table) == 0 || len(ot.owner) == 0 {
-		return errors.Errorf("%s %s Value must be specified", *d.ParamPrefix, utils.OBJNAME)
+		return errors.Errorf("%s %s Value must be specified", *d.ParamPrefix, ddsutils.OBJNAME)
 	}
 	switch *mark {
-	case utils.INCLUDE:
+	case ddsutils.INCLUDE:
 		d.DdlBus.include = append(d.DdlBus.include, map[ownTab]*ObjectNode{*ot: on})
-	case utils.EXCLUDE:
+	case ddsutils.EXCLUDE:
 		d.DdlBus.exclude = append(d.DdlBus.exclude, map[ownTab]*ObjectNode{*ot: on})
 	}
 	return nil
@@ -441,8 +441,8 @@ type DdlSmtSet struct {
 func (d *DdlSmtSet) MarshalJson() ([]byte, error) {
 	var djSet []DdlJson
 	var dj DdlJson
-	dj.Type = &utils.DDL
-	dj.Range = &utils.INCLUDE
+	dj.Type = &ddsutils.DDL
+	dj.Range = &ddsutils.INCLUDE
 	for _, m := range d.dds.DdlBus.include {
 		for tab, node := range m {
 			dj.Owner = &tab.owner
@@ -480,5 +480,5 @@ func (d *DdlSmtSet) GetParam() interface{} {
 
 func (d *DdlSmtSet) Registry() map[string]Parameter {
 	d.Init()
-	return map[string]Parameter{utils.DDL: d.dds}
+	return map[string]Parameter{ddsutils.DDL: d.dds}
 }

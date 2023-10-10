@@ -2,7 +2,7 @@ package ddsspfile
 
 import (
 	"fmt"
-	"github.com/892294101/dds/utils"
+	"github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -31,7 +31,7 @@ func LoadSpfile(file string, enc Encoding, log *logrus.Logger, dbType string, pr
 		return nil, errors.New(fmt.Sprintf("Parameter file path must be specified"))
 	}
 
-	home, err := utils.GetHomeDirectory()
+	home, err := ddsutils.GetHomeDirectory()
 	if err != nil {
 		return nil, err
 	}

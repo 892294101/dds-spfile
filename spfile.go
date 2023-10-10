@@ -2,7 +2,7 @@ package ddsspfile
 
 import (
 	"bufio"
-	"github.com/892294101/dds/utils"
+	ddsutils "github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -31,20 +31,20 @@ func (s *Spfile) init() error {
 	switch {
 	// MySQL extract进程必须存在的参数
 	case s.paramBaseInfo.dbType == GetMySQLName() && s.paramBaseInfo.processType == GetExtractName():
-		s.mustParams = append(s.mustParams, utils.ProcessType)
-		s.mustParams = append(s.mustParams, utils.SourceDBType)
-		s.mustParams = append(s.mustParams, utils.TrailDirType)
-		s.mustParams = append(s.mustParams, utils.DiscardFileType)
-		s.mustParams = append(s.mustParams, utils.DBOptionsType)
-		s.mustParams = append(s.mustParams, utils.TableType)
+		s.mustParams = append(s.mustParams, ddsutils.ProcessType)
+		s.mustParams = append(s.mustParams, ddsutils.SourceDBType)
+		s.mustParams = append(s.mustParams, ddsutils.TrailDirType)
+		s.mustParams = append(s.mustParams, ddsutils.DiscardFileType)
+		s.mustParams = append(s.mustParams, ddsutils.DBOptionsType)
+		s.mustParams = append(s.mustParams, ddsutils.TableType)
 	// Oracle extract进程必须存在的参数
 	case s.paramBaseInfo.dbType == GetOracleName() && s.paramBaseInfo.processType == GetExtractName():
-		s.mustParams = append(s.mustParams, utils.ProcessType)
-		s.mustParams = append(s.mustParams, utils.UserId)
-		s.mustParams = append(s.mustParams, utils.TrailDirType)
-		s.mustParams = append(s.mustParams, utils.DiscardFileType)
-		s.mustParams = append(s.mustParams, utils.DBOptionsType)
-		s.mustParams = append(s.mustParams, utils.TableType)
+		s.mustParams = append(s.mustParams, ddsutils.ProcessType)
+		s.mustParams = append(s.mustParams, ddsutils.UserId)
+		s.mustParams = append(s.mustParams, ddsutils.TrailDirType)
+		s.mustParams = append(s.mustParams, ddsutils.DiscardFileType)
+		s.mustParams = append(s.mustParams, ddsutils.DBOptionsType)
+		s.mustParams = append(s.mustParams, ddsutils.TableType)
 	}
 
 	return nil
@@ -86,96 +86,96 @@ func (s *Spfile) scanParams() error {
 	for _, params := range s.rawData {
 		var pro Parameters
 		switch {
-		case utils.HasPrefixIgnoreCase(params, utils.ProcessType):
-			if s.paramSet[utils.ProcessType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.ProcessType):
+			if s.paramSet[ddsutils.ProcessType] == nil {
 				pro = &ProcessBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				return errors.Errorf("%s configuration cannot be set repeatedly", utils.ProcessType)
+				return errors.Errorf("%s configuration cannot be set repeatedly", ddsutils.ProcessType)
 			}
-		case utils.HasPrefixIgnoreCase(params, utils.SourceDBType):
-			if s.paramSet[utils.SourceDBType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.SourceDBType):
+			if s.paramSet[ddsutils.SourceDBType] == nil {
 				pro = &sourceDBSetBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				return errors.Errorf("%s configuration cannot be set repeatedly", utils.SourceDBType)
+				return errors.Errorf("%s configuration cannot be set repeatedly", ddsutils.SourceDBType)
 			}
 
-		case utils.HasPrefixIgnoreCase(params, utils.TrailDirType):
-			if s.paramSet[utils.TrailDirType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.TrailDirType):
+			if s.paramSet[ddsutils.TrailDirType] == nil {
 				pro = &trailDirBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				return errors.Errorf("%s configuration cannot be set repeatedly", utils.TrailDirType)
+				return errors.Errorf("%s configuration cannot be set repeatedly", ddsutils.TrailDirType)
 			}
 
-		case utils.HasPrefixIgnoreCase(params, utils.DiscardFileType):
-			if s.paramSet[utils.DiscardFileType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.DiscardFileType):
+			if s.paramSet[ddsutils.DiscardFileType] == nil {
 				pro = &DiscardFileBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				return errors.Errorf("%s configuration cannot be set repeatedly", utils.DiscardFileType)
+				return errors.Errorf("%s configuration cannot be set repeatedly", ddsutils.DiscardFileType)
 			}
 
-		case utils.HasPrefixIgnoreCase(params, utils.DBOptionsType):
-			if s.paramSet[utils.DBOptionsType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.DBOptionsType):
+			if s.paramSet[ddsutils.DBOptionsType] == nil {
 				pro = &DBOptionsBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				return errors.Errorf("%s configuration cannot be set repeatedly", utils.DBOptionsType)
+				return errors.Errorf("%s configuration cannot be set repeatedly", ddsutils.DBOptionsType)
 			}
 
-		case utils.HasPrefixIgnoreCase(params, utils.TableType+" "):
-			if s.paramSet[utils.TableType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.TableType+" "):
+			if s.paramSet[ddsutils.TableType] == nil {
 				pro = &TableSetBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				pro = s.paramSet[utils.TableType]
+				pro = s.paramSet[ddsutils.TableType]
 				if err := s.addParams(pro, &params); err != nil {
 					return err
 				}
 			}
-		case utils.HasPrefixIgnoreCase(params, utils.TableExcludeType):
-			if s.paramSet[utils.TableExcludeType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.TableExcludeType):
+			if s.paramSet[ddsutils.TableExcludeType] == nil {
 				pro = &ExcludeTableSetBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				pro = s.paramSet[utils.TableExcludeType]
+				pro = s.paramSet[ddsutils.TableExcludeType]
 				if err := s.addParams(pro, &params); err != nil {
 					return err
 				}
 			}
-		case utils.HasPrefixIgnoreCase(params, utils.OUserIDType):
-			if s.paramSet[utils.OUserIDType] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.OUserIDType):
+			if s.paramSet[ddsutils.OUserIDType] == nil {
 				pro = &userIDSetBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				return errors.Errorf("%s configuration cannot be set repeatedly", utils.ProcessType)
+				return errors.Errorf("%s configuration cannot be set repeatedly", ddsutils.ProcessType)
 			}
-		case utils.HasPrefixIgnoreCase(params, utils.DDL):
-			if s.paramSet[utils.DDL] == nil {
+		case ddsutils.HasPrefixIgnoreCase(params, ddsutils.DDL):
+			if s.paramSet[ddsutils.DDL] == nil {
 				pro = &DdlSmtSetBus
 				if err := s.firstParams(pro, &params); err != nil {
 					return err
 				}
 			} else {
-				pro = s.paramSet[utils.DDL]
+				pro = s.paramSet[ddsutils.DDL]
 				if err := s.addParams(pro, &params); err != nil {
 					return err
 				}
@@ -226,11 +226,11 @@ func (s *Spfile) addParams(pro Parameters, params *string) error {
 func (s *Spfile) registerMustParams() error {
 	for _, paramType := range s.mustParams {
 		switch paramType {
-		case utils.DBOptionsType: // 对缺失的参数补充默认值
-			_, ok := s.paramSet[utils.DBOptionsType]
+		case ddsutils.DBOptionsType: // 对缺失的参数补充默认值
+			_, ok := s.paramSet[ddsutils.DBOptionsType]
 			if !ok {
-				s.paramSet[utils.DBOptionsType] = &DBOptionsBus
-				for _, parameter := range s.paramSet[utils.DBOptionsType].Registry() {
+				s.paramSet[ddsutils.DBOptionsType] = &DBOptionsBus
+				for _, parameter := range s.paramSet[ddsutils.DBOptionsType].Registry() {
 					if err := parameter.initDefault(); err != nil {
 						return err
 					}
@@ -260,7 +260,7 @@ func (s *Spfile) PutParamsText() {
 
 // DDL过滤
 func (s *Spfile) DDLFilter(owner, table, optype, objtype string) bool {
-	return s.paramSet[utils.DDL].GetParam().(*DdlSmt).DdlBus.Filter(owner, table, optype, objtype)
+	return s.paramSet[ddsutils.DDL].GetParam().(*DdlSmt).DdlBus.Filter(owner, table, optype, objtype)
 }
 
 func (s *Spfile) DMLFilter(owner, table *string) (bool, error) {
@@ -291,13 +291,13 @@ func (s *Spfile) DMLFilter(owner, table *string) (bool, error) {
 
 // DML MAP INCLUDE 过滤
 func (s *Spfile) DMLInlucdeFilter(owner, table *string) (bool, error) {
-	return s.paramSet[utils.TableType].GetParam().(*TableSets).TableBus.Filter(owner, table, s.log)
+	return s.paramSet[ddsutils.TableType].GetParam().(*TableSets).TableBus.Filter(owner, table, s.log)
 }
 
 // DML MAP Exclude 过滤
 func (s *Spfile) DMLExcludeFilter(owner, table *string) (bool, error) {
-	if s.paramSet[utils.TableExcludeType] != nil {
-		return s.paramSet[utils.TableExcludeType].GetParam().(*ExcludeTableSets).TableBus.Filter(owner, table, s.log)
+	if s.paramSet[ddsutils.TableExcludeType] != nil {
+		return s.paramSet[ddsutils.TableExcludeType].GetParam().(*ExcludeTableSets).TableBus.Filter(owner, table, s.log)
 	} else {
 		return false, nil
 	}
@@ -305,20 +305,20 @@ func (s *Spfile) DMLExcludeFilter(owner, table *string) (bool, error) {
 
 // 获取Oracle连接串
 func (s *Spfile) GetOracleDBConnStr() *OdbInfo {
-	return s.paramSet[utils.OUserIDType].GetParam().(*UserId).DBInfo
+	return s.paramSet[ddsutils.OUserIDType].GetParam().(*UserId).DBInfo
 }
 
 // 获取Mysql连接串
 func (s *Spfile) GetMySQLDBConnStr() *dbInfo {
-	return s.paramSet[utils.SourceDBType].GetParam().(*SourceDB).DBInfo.GetConnInfo()
+	return s.paramSet[ddsutils.SourceDBType].GetParam().(*SourceDB).DBInfo.GetConnInfo()
 }
 
 // 获取trail info
 func (s *Spfile) GetTrail() *TrailAttribute {
-	return s.paramSet[utils.TrailDirType].GetParam().(*TrailDir).DirTrailAttribute.GetTrail()
+	return s.paramSet[ddsutils.TrailDirType].GetParam().(*TrailDir).DirTrailAttribute.GetTrail()
 }
 
 // 获取进程名称
 func (s *Spfile) GetProcessName() *string {
-	return s.paramSet[utils.ProcessType].GetParam().(*Process).ProInfo.GetName()
+	return s.paramSet[ddsutils.ProcessType].GetParam().(*Process).ProInfo.GetName()
 }

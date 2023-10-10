@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	ddsutils "github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"regexp"
 	"strconv"
@@ -114,8 +114,8 @@ func (s *SourceDB) put() string {
 
 func (s *SourceDB) init() {
 	s.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract: utils.Extract,
+		ddsutils.MySQL: {
+			ddsutils.Extract: ddsutils.Extract,
 		},
 	}
 	/*s.Port = new(PortModel)
@@ -140,18 +140,18 @@ func (s *SourceDB) isType(raw *string, dbType *string, processType *string) erro
 }
 
 func (s *SourceDB) parse(raw *string) error {
-	sdb := utils.TrimKeySpace(strings.Split(*raw, " "))
+	sdb := ddsutils.TrimKeySpace(strings.Split(*raw, " "))
 	sdbLength := len(sdb) - 1
 
 	for i := 0; i < len(sdb); i++ {
 		switch {
-		case strings.EqualFold(sdb[i], utils.SourceDBType):
+		case strings.EqualFold(sdb[i], ddsutils.SourceDBType):
 			s.paramPrefix = &sdb[i]
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.SourceDBType)
+				return errors.Errorf("%s Value must be specified", ddsutils.SourceDBType)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.address != nil {
@@ -165,12 +165,12 @@ func (s *SourceDB) parse(raw *string) error {
 
 			s.DBInfo.address = NextVal
 			i += 1
-		case strings.EqualFold(sdb[i], utils.Port):
+		case strings.EqualFold(sdb[i], ddsutils.Port):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.Port)
+				return errors.Errorf("%s Value must be specified", ddsutils.Port)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.port != nil {
@@ -188,12 +188,12 @@ func (s *SourceDB) parse(raw *string) error {
 			port := uint16(p)
 			s.DBInfo.port = &PortModel{key: &sdb[i], value: &port}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.Types):
+		case strings.EqualFold(sdb[i], ddsutils.Types):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.Types)
+				return errors.Errorf("%s Value must be specified", ddsutils.Types)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.types != nil {
@@ -201,12 +201,12 @@ func (s *SourceDB) parse(raw *string) error {
 			}
 			s.DBInfo.types = &TypeModel{key: &sdb[i], value: NextVal}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.UserId):
+		case strings.EqualFold(sdb[i], ddsutils.UserId):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.UserId)
+				return errors.Errorf("%s Value must be specified", ddsutils.UserId)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.userId != nil {
@@ -214,12 +214,12 @@ func (s *SourceDB) parse(raw *string) error {
 			}
 			s.DBInfo.userId = &UserIdModel{key: &sdb[i], value: NextVal}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.PassWord):
+		case strings.EqualFold(sdb[i], ddsutils.PassWord):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.PassWord)
+				return errors.Errorf("%s Value must be specified", ddsutils.PassWord)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.passWord != nil {
@@ -227,12 +227,12 @@ func (s *SourceDB) parse(raw *string) error {
 			}
 			s.DBInfo.passWord = &PassWordModel{key: &sdb[i], value: NextVal}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.ServerId):
+		case strings.EqualFold(sdb[i], ddsutils.ServerId):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.ServerId)
+				return errors.Errorf("%s Value must be specified", ddsutils.ServerId)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.serverId != nil {
@@ -246,12 +246,12 @@ func (s *SourceDB) parse(raw *string) error {
 			id := uint32(p)
 			s.DBInfo.serverId = &ServerIdModel{key: &sdb[i], value: &id}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.Retry):
+		case strings.EqualFold(sdb[i], ddsutils.Retry):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.Retry)
+				return errors.Errorf("%s Value must be specified", ddsutils.Retry)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.retryMaxConnNumber != nil {
@@ -260,19 +260,19 @@ func (s *SourceDB) parse(raw *string) error {
 
 			retryNum, err := strconv.Atoi(*NextVal)
 			if err != nil {
-				return errors.Errorf("%s %s conversion failed", *NextVal, utils.Retry)
+				return errors.Errorf("%s %s conversion failed", *NextVal, ddsutils.Retry)
 			}
 
 			if retryNum > 3 && retryNum < 12 {
 				s.DBInfo.retryMaxConnNumber = &RetryMaxConnect{key: &sdb[i], value: &retryNum}
 			}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.Character):
+		case strings.EqualFold(sdb[i], ddsutils.Character):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.Character)
+				return errors.Errorf("%s Value must be specified", ddsutils.Character)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.clientCharacter != nil {
@@ -280,12 +280,12 @@ func (s *SourceDB) parse(raw *string) error {
 			}
 			s.DBInfo.clientCharacter = &ClientCharacterSet{key: &sdb[i], value: NextVal}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.Collation):
+		case strings.EqualFold(sdb[i], ddsutils.Collation):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.Collation)
+				return errors.Errorf("%s Value must be specified", ddsutils.Collation)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.clientCollation != nil {
@@ -293,12 +293,12 @@ func (s *SourceDB) parse(raw *string) error {
 			}
 			s.DBInfo.clientCollation = &ClientCollation{key: &sdb[i], value: NextVal}
 			i += 1
-		case strings.EqualFold(sdb[i], utils.TimeZone):
+		case strings.EqualFold(sdb[i], ddsutils.TimeZone):
 			if i+1 > sdbLength {
-				return errors.Errorf("%s Value must be specified", utils.TimeZone)
+				return errors.Errorf("%s Value must be specified", ddsutils.TimeZone)
 			}
 			NextVal := &sdb[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if s.DBInfo.clientCollation != nil {
@@ -318,35 +318,35 @@ func (s *SourceDB) parse(raw *string) error {
 	}
 
 	if s.DBInfo.port == nil {
-		s.DBInfo.port = &PortModel{key: &utils.Port, value: &utils.DefaultPort}
+		s.DBInfo.port = &PortModel{key: &ddsutils.Port, value: &ddsutils.DefaultPort}
 	}
 	if s.DBInfo.types == nil {
-		s.DBInfo.types = &TypeModel{key: &utils.Types, value: &utils.DefaultTypes}
+		s.DBInfo.types = &TypeModel{key: &ddsutils.Types, value: &ddsutils.DefaultTypes}
 	}
 	if s.DBInfo.userId == nil {
-		s.DBInfo.userId = &UserIdModel{key: &utils.UserId, value: &utils.DefaultUserId}
+		s.DBInfo.userId = &UserIdModel{key: &ddsutils.UserId, value: &ddsutils.DefaultUserId}
 	}
 	if s.DBInfo.passWord == nil {
-		return errors.Errorf("%s %s must be specified", utils.SourceDBType, utils.PassWord)
+		return errors.Errorf("%s %s must be specified", ddsutils.SourceDBType, ddsutils.PassWord)
 	}
 
 	if s.DBInfo.serverId == nil {
-		return errors.Errorf("%s %s must be specified", utils.SourceDBType, utils.ServerId)
+		return errors.Errorf("%s %s must be specified", ddsutils.SourceDBType, ddsutils.ServerId)
 	}
 
 	if s.DBInfo.retryMaxConnNumber == nil {
-		s.DBInfo.retryMaxConnNumber = &RetryMaxConnect{key: &utils.Retry, value: &utils.DefaultMaxRetryConnect}
+		s.DBInfo.retryMaxConnNumber = &RetryMaxConnect{key: &ddsutils.Retry, value: &ddsutils.DefaultMaxRetryConnect}
 	}
 
 	if s.DBInfo.clientCharacter == nil && s.DBInfo.clientCollation == nil {
-		s.DBInfo.clientCharacter = &ClientCharacterSet{key: &utils.Character, value: &utils.DefaultClientCharacter}
-		s.DBInfo.clientCollation = &ClientCollation{key: &utils.Collation, value: &utils.DefaultClientCollation}
+		s.DBInfo.clientCharacter = &ClientCharacterSet{key: &ddsutils.Character, value: &ddsutils.DefaultClientCharacter}
+		s.DBInfo.clientCollation = &ClientCollation{key: &ddsutils.Collation, value: &ddsutils.DefaultClientCollation}
 	} else {
 		return errors.Errorf("character set and collation must be configured at the same time")
 	}
 
 	if s.DBInfo.timeZone == nil {
-		s.DBInfo.timeZone = &TimeZone{key: &utils.TimeZone, value: utils.DefaultTimeZone}
+		s.DBInfo.timeZone = &TimeZone{key: &ddsutils.TimeZone, value: ddsutils.DefaultTimeZone}
 	}
 
 	return nil
@@ -397,5 +397,5 @@ func (sd *sourceDBSet) GetParam() interface{} {
 
 func (sd *sourceDBSet) Registry() map[string]Parameter {
 	sd.Init()
-	return map[string]Parameter{utils.SourceDBType: sd.sdb}
+	return map[string]Parameter{ddsutils.SourceDBType: sd.sdb}
 }

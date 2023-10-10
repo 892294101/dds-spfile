@@ -3,7 +3,7 @@ package ddsspfile
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/892294101/dds/utils"
+	ddsutils "github.com/892294101/dds-utils"
 	"github.com/pkg/errors"
 	"strings"
 )
@@ -20,13 +20,13 @@ func (d *DiscardFile) put() string {
 
 func (d *DiscardFile) init() {
 	d.supportParams = map[string]map[string]string{
-		utils.MySQL: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.MySQL: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
-		utils.Oracle: {
-			utils.Extract:  utils.Extract,
-			utils.Replicat: utils.Replicat,
+		ddsutils.Oracle: {
+			ddsutils.Extract:  ddsutils.Extract,
+			ddsutils.Replicat: ddsutils.Replicat,
 		},
 	}
 }
@@ -45,17 +45,17 @@ func (d *DiscardFile) isType(raw *string, dbType *string, processType *string) e
 }
 
 func (d *DiscardFile) parse(raw *string) error {
-	discards := utils.TrimKeySpace(strings.Split(*raw, " "))
+	discards := ddsutils.TrimKeySpace(strings.Split(*raw, " "))
 	discardLength := len(discards) - 1
 	for i := 0; i < len(discards); i++ {
 		switch {
-		case strings.EqualFold(discards[i], utils.DiscardFileType):
+		case strings.EqualFold(discards[i], ddsutils.DiscardFileType):
 			d.paramPrefix = &discards[i]
 			if i+1 > discardLength {
 				return errors.Errorf("%s Value must be specified", discards[i])
 			}
 			NextVal := &discards[i+1]
-			if utils.KeyCheck(NextVal) {
+			if ddsutils.KeyCheck(NextVal) {
 				return errors.Errorf("keywords cannot be used: %s", *NextVal)
 			}
 			if d.Dir != nil {
@@ -108,5 +108,5 @@ func (d *DiscardFileSet) GetParam() interface{} {
 
 func (d *DiscardFileSet) Registry() map[string]Parameter {
 	d.Init()
-	return map[string]Parameter{utils.DiscardFileType: d.discard}
+	return map[string]Parameter{ddsutils.DiscardFileType: d.discard}
 }

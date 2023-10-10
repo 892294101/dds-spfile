@@ -3,7 +3,6 @@ module github.com/892294101/dds-spfile
 go 1.19
 
 require (
-	github.com/892294101/dds v0.0.0-20231009030821-f6f41068312d
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
