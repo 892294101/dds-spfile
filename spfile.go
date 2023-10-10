@@ -1,4 +1,4 @@
-package dds_spfile
+package ddsspfile
 
 import (
 	"bufio"
@@ -26,6 +26,7 @@ type Spfile struct {
 
 // 初始化数据库和进程必须存在的参数
 func (s *Spfile) init() error {
+
 	s.paramSet = make(map[string]Parameters)
 	switch {
 	// MySQL extract进程必须存在的参数

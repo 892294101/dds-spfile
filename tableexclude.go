@@ -1,4 +1,4 @@
-package dds_spfile
+package ddsspfile
 
 import (
 	"encoding/json"

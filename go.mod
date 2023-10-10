@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/892294101/dds-utils v0.0.0-20231010070848-7fccccfd3933 // indirect
 	github.com/892294101/go-mysql v1.2.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/pingcap/errors v0.11.5-0.20210425183316-da1aaba5fb63 // indirect

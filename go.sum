@@ -1,5 +1,9 @@
 github.com/892294101/dds v0.0.0-20231009030821-f6f41068312d h1:ASppJ90bgol7r6JzEn2g/QqHImdIuFAEPyAcmQEydLA=
 github.com/892294101/dds v0.0.0-20231009030821-f6f41068312d/go.mod h1:t7JWxpcu/w/teJTDyeGJTHF1+ZclYUKjarJR5HTA4QE=
+github.com/892294101/dds-utils v0.0.0-20231010065931-b1ab4ec62d76 h1:yXEqkHxFOOQSFrQ0lJna1VmwYMD5aluuDgEWYkSAX8M=
+github.com/892294101/dds-utils v0.0.0-20231010065931-b1ab4ec62d76/go.mod h1:Wscn8bbc3tla5mfkBgPVrOWtvn0x9VyrtceIL3X/res=
+github.com/892294101/dds-utils v0.0.0-20231010070848-7fccccfd3933 h1:Oo67WwSXFjXWq+zpgMXsJ+Z+1XW8vRqhyUrwt7Ug4Hk=
+github.com/892294101/dds-utils v0.0.0-20231010070848-7fccccfd3933/go.mod h1:Yu6n8JE6VHc6U8CdOJV/2hBCmgdFVpuxo8wDKaYTOPI=
 github.com/892294101/go-mysql v1.2.3 h1:/zgnt2NtPUk2V1K5+dhHXdQYyI9PP2GBxr7InrXbav8=
 github.com/892294101/go-mysql v1.2.3/go.mod h1:NZMlUg9U8efZazxv8eHB8EYeie/OsrAXQRiHQtE1JHQ=
 github.com/892294101/parser v0.0.0-20220705174247-7e3b2232c99f/go.mod h1:QbzGrjoCGxpt0SciFNGnKxm8QjvfaMJ+nb5ISgdNk1c=

@@ -1,4 +1,4 @@
-package dds_spfile
+package ddsspfile
 
 // 序列化进程名称
 type ProcessJson struct {
